@@ -4,7 +4,7 @@ package ecommerce.order;
 
 option go_package = "ecommerce-with-golang/pb/ecommerce/order";
 
-import "ecommerce/product/product.proto";
+import "proto/ecommerce/product/product.proto";
 
 message Order {
   int64 id = 1;

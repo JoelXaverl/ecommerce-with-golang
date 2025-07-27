@@ -7,13 +7,14 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type UserService struct {
 	user.UnimplementedUserServiceServer
 }
 
-func (us *UserService) CreateUser(ctd context.Context, userRequest *user.User) (*user_CreateResponse, error) {
+func (us *UserService) CreateUser(ctd context.Context, userRequest *user.User) (*user.CreateResponse, error) {
 	log.Println("User is created")
 	return &user.CreateResponse{
 		Message: "User created",
@@ -21,7 +22,7 @@ func (us *UserService) CreateUser(ctd context.Context, userRequest *user.User) (
 }
 
 func main() {
-	lis, err := net.Listen("tcp", "8080")
+	lis, err := net.Listen("tcp", ":8080")
 	if  err != nil {
 		log.Fatal("There is error in your net listen ", err)
 	}
@@ -29,6 +30,8 @@ func main() {
 	serv := grpc.NewServer()
 
 	user.RegisterUserServiceServer(serv, &UserService{})
+
+	reflection.Register(serv)
 
 	if err := serv.Serve(lis); err != nil {
 		log.Fatal("Error running server ", err)

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v6.31.1
-// source: ecommerce/order/order.proto
+// source: proto/ecommerce/order/order.proto
 
 package order
 
@@ -33,7 +33,7 @@ type Order struct {
 
 func (x *Order) Reset() {
 	*x = Order{}
-	mi := &file_ecommerce_order_order_proto_msgTypes[0]
+	mi := &file_proto_ecommerce_order_order_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -45,7 +45,7 @@ func (x *Order) String() string {
 func (*Order) ProtoMessage() {}
 
 func (x *Order) ProtoReflect() protoreflect.Message {
-	mi := &file_ecommerce_order_order_proto_msgTypes[0]
+	mi := &file_proto_ecommerce_order_order_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +58,7 @@ func (x *Order) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Order.ProtoReflect.Descriptor instead.
 func (*Order) Descriptor() ([]byte, []int) {
-	return file_ecommerce_order_order_proto_rawDescGZIP(), []int{0}
+	return file_proto_ecommerce_order_order_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Order) GetId() int64 {
@@ -82,34 +82,34 @@ func (x *Order) GetProducts() []*product.Product {
 	return nil
 }
 
-var File_ecommerce_order_order_proto protoreflect.FileDescriptor
+var File_proto_ecommerce_order_order_proto protoreflect.FileDescriptor
 
-const file_ecommerce_order_order_proto_rawDesc = "" +
+const file_proto_ecommerce_order_order_proto_rawDesc = "" +
 	"\n" +
-	"\x1becommerce/order/order.proto\x12\x0fecommerce.order\x1a\x1fecommerce/product/product.proto\"g\n" +
+	"!proto/ecommerce/order/order.proto\x12\x0fecommerce.order\x1a%proto/ecommerce/product/product.proto\"g\n" +
 	"\x05Order\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
 	"\x06number\x18\x02 \x01(\tR\x06number\x126\n" +
 	"\bproducts\x18\x03 \x03(\v2\x1a.ecommerce.product.ProductR\bproductsB*Z(ecommerce-with-golang/pb/ecommerce/orderb\x06proto3"
 
 var (
-	file_ecommerce_order_order_proto_rawDescOnce sync.Once
-	file_ecommerce_order_order_proto_rawDescData []byte
+	file_proto_ecommerce_order_order_proto_rawDescOnce sync.Once
+	file_proto_ecommerce_order_order_proto_rawDescData []byte
 )
 
-func file_ecommerce_order_order_proto_rawDescGZIP() []byte {
-	file_ecommerce_order_order_proto_rawDescOnce.Do(func() {
-		file_ecommerce_order_order_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_ecommerce_order_order_proto_rawDesc), len(file_ecommerce_order_order_proto_rawDesc)))
+func file_proto_ecommerce_order_order_proto_rawDescGZIP() []byte {
+	file_proto_ecommerce_order_order_proto_rawDescOnce.Do(func() {
+		file_proto_ecommerce_order_order_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_ecommerce_order_order_proto_rawDesc), len(file_proto_ecommerce_order_order_proto_rawDesc)))
 	})
-	return file_ecommerce_order_order_proto_rawDescData
+	return file_proto_ecommerce_order_order_proto_rawDescData
 }
 
-var file_ecommerce_order_order_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_ecommerce_order_order_proto_goTypes = []any{
+var file_proto_ecommerce_order_order_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_proto_ecommerce_order_order_proto_goTypes = []any{
 	(*Order)(nil),           // 0: ecommerce.order.Order
 	(*product.Product)(nil), // 1: ecommerce.product.Product
 }
-var file_ecommerce_order_order_proto_depIdxs = []int32{
+var file_proto_ecommerce_order_order_proto_depIdxs = []int32{
 	1, // 0: ecommerce.order.Order.products:type_name -> ecommerce.product.Product
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
@@ -118,26 +118,26 @@ var file_ecommerce_order_order_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_ecommerce_order_order_proto_init() }
-func file_ecommerce_order_order_proto_init() {
-	if File_ecommerce_order_order_proto != nil {
+func init() { file_proto_ecommerce_order_order_proto_init() }
+func file_proto_ecommerce_order_order_proto_init() {
+	if File_proto_ecommerce_order_order_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ecommerce_order_order_proto_rawDesc), len(file_ecommerce_order_order_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_ecommerce_order_order_proto_rawDesc), len(file_proto_ecommerce_order_order_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_ecommerce_order_order_proto_goTypes,
-		DependencyIndexes: file_ecommerce_order_order_proto_depIdxs,
-		MessageInfos:      file_ecommerce_order_order_proto_msgTypes,
+		GoTypes:           file_proto_ecommerce_order_order_proto_goTypes,
+		DependencyIndexes: file_proto_ecommerce_order_order_proto_depIdxs,
+		MessageInfos:      file_proto_ecommerce_order_order_proto_msgTypes,
 	}.Build()
-	File_ecommerce_order_order_proto = out.File
-	file_ecommerce_order_order_proto_goTypes = nil
-	file_ecommerce_order_order_proto_depIdxs = nil
+	File_proto_ecommerce_order_order_proto = out.File
+	file_proto_ecommerce_order_order_proto_goTypes = nil
+	file_proto_ecommerce_order_order_proto_depIdxs = nil
 }

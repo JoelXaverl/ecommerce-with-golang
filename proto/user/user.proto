@@ -22,6 +22,7 @@ message User {
   int64 age = 3;
   double balance = 4; //decimal ada varian yaitu float dan double
   bool is_active= 5;
+  Address address = 6;
   // ada tipe data byte tapi kebutuhannya sangat spesifik
   repeated string educations = 7;
   string spouse_name = 8;
