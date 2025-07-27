@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"ecommerce-with-golang/pb/user"
+	"ecommerce-with-golang/pb/chat"
 	"log"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -15,22 +16,38 @@ func main() {
 		log.Fatal("Failed to create", err)
 	}
 
-	userClient := user.NewUserServiceClient(clientConn)
-
-	response, err := userClient.CreateUser(context.Background(), &user.User{
-		Id: 1,
-		Age: 13,
-		Balance: 13000,
-		Address: &user.Address{
-			Id: 123,
-			FullAddress: "Jln Jendral Sudirman",
-			Provice: "DKI Jakarta",
-			City: "Jakarta",
-		},
-	})
+	chatClient := chat.NewChatServiceClient(clientConn)
+	stream, err := chatClient.SendMessage(context.Background())
 	if err != nil {
-		log.Fatal("Error calling user client ", err)
+		log.Fatal("Failed to send message", err)
 	}
 
-	log.Println("Got message from server: ", response.Message)
+	err = stream.Send(&chat.ChatMessage{
+		UserId: 123,
+		Content: "Hello from client",
+	})
+	if err != nil {
+		log.Fatal("Failed to send via stream ", err)
+	}
+	err = stream.Send(&chat.ChatMessage{
+		UserId: 123,
+		Content: "Hello again my friend",
+	})
+	if err != nil {
+		log.Fatal("Failed to send via stream ", err)
+	}
+	time.Sleep(5 * time.Second)
+	err = stream.Send(&chat.ChatMessage{
+		UserId: 123,
+		Content: "Hello again my brother",
+	})
+	if err != nil {
+		log.Fatal("Failed to send via stream ", err)
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatal("Failed close ", err)
+	}
+	log.Println("Connection id closed. Message: ", res.Message)
 }
