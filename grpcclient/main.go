@@ -3,9 +3,8 @@ package main
 import (
 	"context"
 	"ecommerce-with-golang/pb/chat"
-	"errors"
-	"io"
 	"log"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -19,22 +18,47 @@ func main() {
 	}
 
 	chatClient := chat.NewChatServiceClient(clientConn)
-	stream, err := chatClient.ReceiveMessage(context.Background(), &chat.ReceiveMessageRequest{
-		UserId: 30,
-	})
+	stream, err := chatClient.Chat(context.Background())
 	if err != nil {
 		log.Fatal("Failed to send message", err)
 	}
 
-	for {
-		msg, err := stream.Recv()
-		if err != nil {
-			if errors.Is(err, io.EOF) {
-				break
-			}
-			log.Fatal("Failed to receive message", err)
-		}
-		
-		log.Printf("Got message to %d content %s", msg.UserId, msg.Content)
+	err = stream.Send(&chat.ChatMessage{
+		UserId: 123,
+		Content: "Hello this is client",
+	})
+	if err != nil {
+		log.Fatalf("Failed to send message %v", err)
 	}
+
+	msg, err := stream.Recv()
+	if err != nil {
+		log.Fatalf("Failed to receive message %v", err)
+	}
+	log.Printf("Got reply from server %d content %s\n", msg.UserId, msg.Content)
+	msg, err = stream.Recv()
+	if err != nil {
+		log.Fatalf("Failed to receive message %v", err)
+	}
+	log.Printf("Got reply from server %d content %s\n", msg.UserId, msg.Content)
+
+	time.Sleep(5 * time.Second)
+
+	err = stream.Send(&chat.ChatMessage{
+		UserId: 123,
+		Content: "Hello this is client again",
+	})
+	if err != nil {
+		log.Fatalf("Failed to send message %v", err)
+	}
+	msg, err = stream.Recv()
+	if err != nil {
+		log.Fatalf("Failed to receive message %v", err)
+	}
+	log.Printf("Got reply from server %d content %s\n", msg.UserId, msg.Content)
+	msg, err = stream.Recv()
+	if err != nil {
+		log.Fatalf("Failed to receive message %v", err)
+	}
+	log.Printf("Got reply from server %d content %s\n", msg.UserId, msg.Content)
 }
