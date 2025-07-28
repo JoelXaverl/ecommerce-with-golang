@@ -21,6 +21,12 @@ type UserService struct {
 }
 
 func (us *UserService) CreateUser(ctd context.Context, userRequest *user.User) (*user.CreateResponse, error) {
+	if userRequest.Age < 1 {
+		return nil, status.Errorf(codes.InvalidArgument, "Age must be above 0")
+	}
+
+	return nil, status.Errorf(codes.Internal, "server is bugged")
+	
 	log.Println("User is created")
 	return &user.CreateResponse{
 		Message: "User created",
