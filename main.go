@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"ecommerce-with-golang/pb/chat"
+	"ecommerce-with-golang/pb/common"
 	"ecommerce-with-golang/pb/user"
 	"errors"
 	"io"
@@ -22,14 +23,23 @@ type UserService struct {
 
 func (us *UserService) CreateUser(ctd context.Context, userRequest *user.User) (*user.CreateResponse, error) {
 	if userRequest.Age < 1 {
-		return nil, status.Errorf(codes.InvalidArgument, "Age must be above 0")
+		return &user.CreateResponse{
+			Base: &common.BaseResponse{
+				StatusCode: 400,
+				IsSuccess: false,
+				Message: "Validation error",
+			},
+		}, nil
 	}
-
-	return nil, status.Errorf(codes.Internal, "server is bugged")
 	
 	log.Println("User is created")
 	return &user.CreateResponse{
-		Message: "User created",
+		Base: &common.BaseResponse{
+			StatusCode: 200,
+			IsSuccess: true,
+			Message: "User created",
+		},
+		
 	}, nil
 }
 
