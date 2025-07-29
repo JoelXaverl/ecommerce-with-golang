@@ -11,6 +11,7 @@ import (
 	"net"
 	"time"
 
+	protovalidate "buf.build/go/protovalidate"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -23,14 +24,29 @@ type UserService struct {
 }
 
 func (us *UserService) CreateUser(ctd context.Context, userRequest *user.User) (*user.CreateResponse, error) {
-	if userRequest.Age < 1 {
-		return &user.CreateResponse{
-			Base: &common.BaseResponse{
-				StatusCode: 400,
-				IsSuccess: false,
-				Message: "Validation error",
-			},
-		}, nil
+	if err := protovalidate.Validate(userRequest); err != nil {
+		if ve, ok := err.(*protovalidate.ValidationError); ok {
+			var validations []*common.ValidationError = make([]*common.ValidationError, 0)
+			for _, fieldErr := range ve.Violations {
+				log.Printf("Field %s message %s", *fieldErr.Proto.Field.Elements[0].FieldName, *fieldErr.Proto.Message)
+
+				validations = append(validations, &common.ValidationError{
+					Field: *fieldErr.Proto.Field.Elements[0].FieldName,
+					Message: *fieldErr.Proto.Message,
+				})
+			}
+
+			return &user.CreateResponse{
+				Base: &common.BaseResponse{
+					ValidationError: validations,
+					StatusCode: 400,
+					IsSuccess: false,
+					Message: "validation error",
+				},
+			}, nil
+		}
+
+		return nil, status.Errorf(codes.InvalidArgument, "validation error %v", err)
 	}
 	
 	log.Println("User is created")
