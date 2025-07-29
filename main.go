@@ -9,11 +9,13 @@ import (
 	"io"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	protovalidate "buf.build/go/protovalidate"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -29,12 +31,49 @@ func loggingMiddleware(ctx context.Context, req any, info *grpc.UnaryServerInfo,
 }
 
 func authMiddleware(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+	// Authorization
 	log.Println("Masuk auth middleware")
+
+	// Whitelist Public API
+	if info.FullMethod == "/user.UserService/Login" {
+			return handler(ctx, req)
+	}
+
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.Unknown, "failed parshing metadata")
+	}
+
+
+	authToken, ok := md["authorization"]
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "token doesn't exist")
+	}
+
+	splitToken := strings.Split(authToken[0], " ")
+	token := splitToken[1]
+
+	if token != "secret" {
+		return nil, status.Error(codes.Unauthenticated, "token isn't valid")
+	}
+
 	return handler(ctx, req)
 }
 
 type UserService struct {
 	user.UnimplementedUserServiceServer
+}
+
+func (us *UserService) Login(ctx context.Context, LoginRequest *user.LoginRequest) (*user.LoginResponse, error) {
+	return &user.LoginResponse{
+		Base: &common.BaseResponse{
+			StatusCode: 200,
+			IsSuccess: true,
+			Message: "Success",
+		},
+		AccessToken: "secret",
+		RefreshToken: "refresh token",
+	}, nil
 }
 
 func (us *UserService) CreateUser(ctd context.Context, userRequest *user.User) (*user.CreateResponse, error) {
